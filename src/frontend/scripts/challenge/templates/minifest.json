@@ -1,0 +1,14 @@
+{
+  "$schema": "./schemas/manifest.json",
+
+  "title": "",
+  "description": "",
+  "authors": [],
+
+  "stages": [
+    {
+      "type": "pick",
+      "dataset": "./datasets/example.json"
+    }
+  ]
+}

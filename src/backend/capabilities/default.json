@@ -1,0 +1,35 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+
+  "identifier": "default",
+  "description": "Capability for the main window",
+
+  "windows": [
+    "main"
+  ],
+
+  "permissions": [
+    "core:default",
+    "core:window:allow-show",
+
+    "fs:allow-data-meta-recursive",
+    "fs:allow-data-read-recursive",
+    "fs:allow-data-write-recursive",
+
+    "fs:allow-home-meta-recursive",
+    "fs:allow-home-read-recursive",
+    "fs:allow-home-write-recursive",
+
+    "dialog:default",
+    "opener:default",
+
+    {
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        {
+          "path": "$HOME/*"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+@import url('./animations.css');
+
+:root {
+  --color-background: #051E20;
+  --color-foreground: #FFFFFF;
+  --color-foreground-fade-primary: color-mix(in srgb, var(--color-foreground), transparent 50%);
+  --color-foreground-fade-secondary: color-mix(in srgb, var(--color-foreground-fade-primary), transparent 25%);
+
+  --color-container-light: #093b3d;
+  --color-container-medium: color-mix(in srgb, var(--color-container-light), var(--color-background) 50%);
+  --color-container-dark: color-mix(in srgb, var(--color-container-medium), var(--color-background) 60%);
+
+  --color-accent-light: #D02058;
+  --color-accent-medium: color-mix(in srgb, var(--color-accent-light), black 10%);
+  --color-accent-dark: color-mix(in srgb, var(--color-accent-medium), black 5%);
+
+  --color-success: #38D942;
+  --color-error: #D93838;
+  --color-warning: #F4B400;
+
+  --size-large: 1.6rem;
+  --size-big: 1.4rem;
+  --size-medium: 1.2rem;
+  --size-small: 1.1rem;
+  --size-tiny: 1rem;
+
+  --spacing-large: 2rem;
+  --spacing-big: 1.5rem;
+  --spacing-medium: 1rem;
+  --spacing-small: 0.5rem;
+  --spacing-tiny: 0.25rem;
+
+  --border-radius: 0.5rem;
+
+  --easing-outQuint: cubic-bezier(0.22, 1, 0.36, 1)
+}
+
+@font-face {
+  font-family: Murecho;
+  font-display: fallback;
+  src: url('../fonts/murecho.woff2')
+}
+
+* {
+  font-family: Murecho;
+  user-select: none
+}
+
+*::-webkit-scrollbar {
+  display: none
+}
+
+h1 {
+  color: var(--color-foreground);
+  font-size: var(--size-large);
+  font-weight: 500;
+  margin: 0rem
+}
+
+h2 {
+  color: var(--color-foreground);
+  font-size: var(--size-big);
+  font-weight: 500;
+  margin: 0rem
+}
+
+h3 {
+  color: var(--color-foreground);
+  font-size: var(--size-medium);
+  font-weight: 500;
+  margin: 0rem
+}
+
+h4 {
+  color: var(--color-foreground);
+  font-size: var(--size-small);
+  font-weight: 500;
+  margin: 0rem
+}
+
+h5 {
+  color: var(--color-foreground);
+  font-size: var(--size-tiny);
+  font-weight: 500;
+  margin: 0rem
+}
+
+p {
+  color: var(--color-foreground);
+  font-size: var(--size-tiny);
+  font-weight: 400;
+  margin: 0rem
+}
+
+.box-shadow {
+  box-shadow: 0rem 0rem 1rem 0rem rgba(0,0,0,0.25);
+  -webkit-box-shadow: 0rem 0rem 1rem 0rem rgba(0,0,0,0.25);
+  -moz-box-shadow: 0rem 0rem 1rem 0rem rgba(0,0,0,0.25);
+}
+
+.text-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  background-color: var(--color-accent-light);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-tiny) var(--spacing-small);
+  transition: transform 0.5s var(--easing-outQuint);
+  cursor: pointer
+}
+
+.text-button:hover {
+  transform: scale(1.05)
+}
+
+.text-button:hover:active {
+  transform: scale(0.95)
+}
+
+.icon-button {
+  transition: transform 0.5s var(--easing-outQuint);
+  cursor: pointer
+}
+
+.icon-button:hover {
+  transform: scale(1.1)
+}
+
+.icon-button:hover:active {
+  transform: scale(0.9)
+}

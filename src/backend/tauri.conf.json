@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+
+  "productName": "Waraja",
+  "version": "0.0.0",
+  "identifier": "me.lmantw.waraja",
+
+  "build": {
+    "beforeDevCommand": "vite -l silent",
+    "devUrl": "http://localhost:8080",
+
+    "beforeBuildCommand": "vite build -l silent",
+    "frontendDist": "./dist"
+  },
+
+  "app": {
+    "windows": [
+      {
+        "title": "Waraja",
+        "width": 960,
+        "height": 720,
+        "visible": false,
+        "dragDropEnabled": false
+      }
+    ],
+
+    "security": {
+      "csp": null
+    }
+  },
+
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "./icons/32x32.png",
+      "./icons/128x128.png",
+      "./icons/128x128@2x.png",
+      "./icons/icon.icns",
+      "./icons/icon.ico"
+    ]
+  }
+}

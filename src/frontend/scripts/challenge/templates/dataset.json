@@ -1,0 +1,6 @@
+{
+  "$schema": "../schemas/dataset.json",
+
+  "type": "simple",
+  "groups": []
+}

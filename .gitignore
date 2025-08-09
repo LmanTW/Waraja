@@ -1,0 +1,9 @@
+bun.lock
+node_modules
+
+dist/
+
+src/backend/target/
+src/backend/gen/
+
+src/bundler/.zig-cache
