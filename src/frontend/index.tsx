@@ -6,6 +6,7 @@ import { render } from 'preact'
 
 import Library from './scripts/Library'
 
+import Challange from './screens/Challange'
 import Header from './components/Header'
 import Create from './screens/Create'
 import Import from './screens/Import'
@@ -72,6 +73,7 @@ const App = () => {
           <Route path='/' component={Home}/>
           <Route path='/create' component={Create}/>
           <Route path='/import' component={Import}/>
+          <Route path='/challange/:id' component={Challange}/>
         </Switch>
       </div>
 

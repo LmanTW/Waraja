@@ -2,7 +2,8 @@
   "$schema": "./schemas/manifest.json",
 
   "title": "",
-  "description": "",
+  "descriptionShort": "",
+  "descriptionLong": "",
   "authors": [],
 
   "stages": [

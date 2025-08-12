@@ -5,6 +5,7 @@ import { ComponentChild } from 'preact'
 import { path } from '@tauri-apps/api'
 import * as lucid from 'lucide-preact'
 
+import { resolveUntil } from '../scripts/utilities'
 import Project from '../scripts/challenge/Project'
 
 const projectFolderPath = signal<null | string>(null)
@@ -115,11 +116,13 @@ export default (): ComponentChild => {
       return
     }
 
-    const { error: projectDiagnoseError, data: diagnostics } = await Project.diagnose(projectFolderPath.value)
+    progress.value = 'Refreshing the project...'
 
+    const { error: projectDiagnoseError, data: diagnostics } = await resolveUntil(Project.diagnose(projectFolderPath.value), 500)
 
     if (projectDiagnoseError !== null) {
       error.value = projectDiagnoseError
+      progress.value = null
 
       return
     }
@@ -131,6 +134,7 @@ export default (): ComponentChild => {
 
       if (projectLoadError !== null) {
         error.value = projectLoadError
+        progress.value = null
 
         return
       }
@@ -139,6 +143,7 @@ export default (): ComponentChild => {
     }
 
     error.value = null
+    progress.value = null
   }
 
   return (
@@ -158,11 +163,7 @@ export default (): ComponentChild => {
                 </div>
               ) : (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--spacing-medium)', backgroundColor: 'var(--color-container-dark)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-medium)', overflow: 'auto' }}>
-                  <h3>Manifest</h3>
-                  <div class='box-shadow' style={{ backgroundColor: 'var(--color-container-light)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-small)' }}>
-                    <h5>{projectData.value.manifest.title}</h5>
-                    <p style={{ color: 'var(--color-foreground-fade-primary)' }}>{projectData.value.manifest.description}</p>
-                  </div>
+                  <h3>Project Info</h3>
                 </div>
               )
             }

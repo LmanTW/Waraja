@@ -63,7 +63,8 @@ namespace Manifest {
     const diagnostics: Project.Diagnostic[] = []
 
     if (result.data.title.trim().length === 0) diagnostics.push({ type: 'warning', title: 'Empty title for the challenge.', description: 'The title of the challenge cannot be empty.' })
-    if (result.data.description.trim().length === 0) diagnostics.push({ type: 'warning', title: 'Empty description for the challenge.', description: 'The description of the challenge cannot be empty.' })
+    if (result.data.descriptionShort.trim().length === 0) diagnostics.push({ type: 'warning', title: 'Empty short description for the challenge.', description: 'The short description of the challenge cannot be empty.' })
+    if (result.data.descriptionLong.trim().length === 0) diagnostics.push({ type: 'warning', title: 'Empty long description for the challenge.', description: 'The long description of the challenge cannot be empty.' })
     if (result.data.authors.length === 0) diagnostics.push({ type: 'warning', title: 'No author for the challenge.', description: 'The challange need to have at least one author.' })
 
     for (let i = 0; i < result.data.stages.length; i++) {
@@ -121,7 +122,8 @@ namespace Manifest {
   // The schema for the manifest.
   export const Schema = zod.object({
     title: zod.string(),
-    description: zod.string(),
+    descriptionShort: zod.string(),
+    descriptionLong: zod.string(),
     authors: zod.array(zod.string()),
 
     stages: zod.array(zod.object({

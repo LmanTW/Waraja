@@ -52,20 +52,23 @@ namespace Project {
       return { error: manifestLoadError, data: null }
     }
 
-    const stages: Manifest.Data['stages'] = []
+    const datasets: { [key: string]: Dataset.Data.Generic } = {}
 
     for (const stage of manifest.stages) {
-      stages.push({
-        type: stage.type,
-        dataset: await path.resolve(folderPath, stage.dataset)
-      })
+      const { error: datasetLoadError, data: dataset } = await Dataset.load(await path.resolve(folderPath, stage.dataset))
+
+      if (datasetLoadError !== null) {
+        return { error: datasetLoadError, data: null }
+      }
+
+      datasets[stage.dataset] = dataset
     }
   
     return {
       error: null,
       data: {
         manifest,
-        stages
+        datasets
       }
     }
   }
@@ -118,7 +121,7 @@ namespace Project {
   // The data structure of a project.
   export interface Data {
     manifest: Manifest.Data,
-    stages: Manifest.Data['stages']
+    datasets: { [key: string]: Dataset.Data.Generic }
   }
 
   // The data structure of a diagnostic.

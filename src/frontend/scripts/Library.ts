@@ -7,11 +7,11 @@ import { Result, ensureComplete, hash } from './utilities'
 import Manifest from './challenge/Manifest'
 import Project from './challenge/Project'
 
-let challenges: { [key: string]: Manifest.Data } = {}
+let challenges: { [key: string]: Project.Data } = {}
 
 // The library.
 namespace Library {
-  export const list = signal<{ id: string, manifest: Manifest.Data }[]>([])
+  export const list = signal<{ id: string, project: Project.Data }[]>([])
   export const errors = signal<{ id: string, message: string }[]>([])
 
   // Scan the library.
@@ -19,18 +19,24 @@ namespace Library {
     challenges = {}
     errors.value = []
 
+    const { error: ensureCompleteError } = await ensureComplete()
+
+    if (ensureCompleteError !== null) {
+      return { error: ensureCompleteError, data: null }
+    }
+
     try {
       for (const entry of await fs.readDir('./Waraja/library', { baseDir: fs.BaseDirectory.Data })) {
         if (entry.isDirectory) {
-          const { error: manifestLoadError, data: manifest } = await Manifest.load(await path.join(await path.dataDir(), 'Waraja', 'library', entry.name, 'manifest.json'))
+          const { error: projectLoadError, data: project } = await Project.load(await path.join(await path.dataDir(), 'Waraja', 'library', entry.name))
 
-          if (manifestLoadError !== null) {
-            Library.errors.value.push({ id: entry.name, message: manifestLoadError })
+          if (projectLoadError !== null) {
+            Library.errors.value.push({ id: entry.name, message: projectLoadError })
 
             continue
           } 
 
-          challenges[entry.name] = manifest
+          challenges[entry.name] = project
         }
       }
     } catch (_) {
@@ -40,16 +46,26 @@ namespace Library {
     Library.list.value = Object.keys(challenges).map((id) => {
       return {
         id,
-        manifest: challenges[id]
+        project: challenges[id]
       }
-    })
+    }).sort((a, b) => a.project.manifest.title.localeCompare(b.project.manifest.title))
 
     return { error: null, data: null }
   }
 
   // Get a challange.
-  export async function get (id: string): Promise<Result<string, null>> {
-    return { error: null, data: null }
+  export function get (id: string): Result<string, Project.Data> {
+    if (challenges[id] === undefined) {
+      for (const error of errors.value) {
+        if (error.id === id) {
+          return { error: error.message, data: null }
+        }
+      }
+
+      return { error: 'Challange not found.', data: null }
+    }
+
+    return { error: null, data: challenges[id] }
   }
 
   // Add a challange.
@@ -119,9 +135,9 @@ namespace Library {
       return { error: 'Something went wrong while removing the challange.', data: null }
     }
 
-    delete challenges[id]
-
     Library.list.value = Library.list.value.filter((challange) => challange.id !== id) 
+
+    delete challenges[id]
 
     return { error: null, data: null }
   }

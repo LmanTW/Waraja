@@ -2,7 +2,9 @@ import { open, confirm } from '@tauri-apps/plugin-dialog'
 import { signal } from '@preact/signals'
 import { ComponentChild } from 'preact'
 import * as lucid from 'lucide-preact'
+import { Link } from 'wouter-preact'
 
+import { resolveUntil } from '../scripts/utilities'
 import Library from '../scripts/Library'
 
 const error = signal<null | string>(null)
@@ -43,7 +45,9 @@ export default (): ComponentChild => {
 
   // Refresh the library.
   const refreshLibrary = async (): Promise<void> => {
-    const { error: libraryScanError } = await Library.scan()
+    progress.value = 'Refreshing the library...'
+
+    const { error: libraryScanError } = await resolveUntil(Library.scan(), 500)
 
     if (libraryScanError !== null) {
         error.value = libraryScanError
@@ -53,6 +57,7 @@ export default (): ComponentChild => {
     }
 
     error.value = null
+    progress.value = null
   }
 
   // Remove a challange.
@@ -94,45 +99,47 @@ export default (): ComponentChild => {
               <lucid.X class='icon-button' onClick={() => error.value = null} style={{ color: 'var(--color-foreground)' }}/>
             </div>
           )
-        }
+        } 
 
-        {
-          Library.errors.value.map((challange) => {
-            return (
-              <div class='box-shadow' style={{ display: 'flex', alignItems: 'center', backgroundColor: 'var(--color-accent-light)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-medium)', overflow: 'hidden' }}>
-                <div style={{ flex: 1, marginRight: 'var(--spacing-medium)', overflow: 'hidden' }}>
-                  <h3 style={{ whiteSpace: 'nowrap' }}>{challange.message}</h3>
-                  <p style={{ color: 'var(--color-foreground-fade-primary)', whiteSpace: 'nowrap' }}>{challange.id}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-medium)', backgroundColor: 'var(--color-container-dark)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-medium)' }}>
+          {
+            Library.errors.value.map((challange) => {
+              return (
+                <div class='box-shadow' style={{ display: 'flex', alignItems: 'center', backgroundColor: 'var(--color-accent-light)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-medium)' }}>
+                  <div style={{ flex: 1, marginRight: 'var(--spacing-medium)', overflow: 'hidden' }}>
+                    <h3 style={{ whiteSpace: 'nowrap' }}>{challange.message}</h3>
+                    <p style={{ color: 'var(--color-foreground-fade-primary)', whiteSpace: 'nowrap' }}>{challange.id}</p>
+                  </div>
+
+                  <lucid.Trash class='icon-button' onClick={() => removeChallange(challange.id)} style={{ flexShrink: 0, color: 'var(--color-foreground)' }}/>
                 </div>
+              )
+            })
+          }
 
-                <lucid.Trash class='icon-button' onClick={() => removeChallange(challange.id)} style={{ flexShrink: 0, color: 'var(--color-foreground)' }}/>
+          {
+            Library.list.value.map((challange) => {
+              return (
+                <div class='box-shadow' style={{ display: 'flex', alignItems: 'center', backgroundColor: 'var(--color-container-light)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-medium)' }}>
+                  <Link href={`/challange/${challange.id}`} style={{ flex: 1, textDecoration: 'none', marginRight: 'var(--spacing-medium)', overflow: 'hidden', cursor: 'pointer' }}>
+                    <h3 style={{ whiteSpace: 'nowrap' }}>{challange.project.manifest.title}</h3>
+                    <p style={{ color: 'var(--color-foreground-fade-primary)', whiteSpace: 'nowrap' }}>{challange.project.manifest.descriptionShort}</p>
+                  </Link>
+
+                  <lucid.Trash class='icon-button' onClick={() => removeChallange(challange.id)} style={{ flexShrink: 0, color: 'var(--color-foreground)' }}/>
+                </div>
+              )
+            })
+          }
+
+          {
+            Library.list.value.length === 0 && (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <p style={{ color: 'var(--color-foreground-fade-secondary)' }}>No challange in the library.</p>
               </div>
             )
-          })
-        }
-
-        {
-          Library.list.value.map((challange) => {
-            return (
-              <div class='box-shadow' style={{ display: 'flex', alignItems: 'center', backgroundColor: 'var(--color-container-light)', borderRadius: 'var(--border-radius)', padding: 'var(--spacing-medium)' }}>
-                <div style={{ flex: 1, marginRight: 'var(--spacing-medium)', overflow: 'hidden' }}>
-                  <h3 style={{ whiteSpace: 'nowrap' }}>{challange.manifest.title}</h3>
-                  <p style={{ color: 'var(--color-foreground-fade-primary)', whiteSpace: 'nowrap' }}>{challange.manifest.description}</p>
-                </div>
-
-                <lucid.Trash class='icon-button' onClick={() => removeChallange(challange.id)} style={{ flexShrink: 0, color: 'var(--color-foreground)' }}/>
-              </div>
-            )
-          })
-        }
-
-        {
-          Library.list.value.length === 0 && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <p style={{ color: 'var(--color-foreground-fade-secondary)' }}>No challange in the library.</p>
-            </div>
-          )
-        }
+          }
+        </div>
       </div>
     </div>
   )

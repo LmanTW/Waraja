@@ -21,6 +21,22 @@ export async function ensureComplete (): Promise<Result<string, null>> {
   return { error: null, data: null }
 }
 
+// Resolve a promise to resolve and wait until a specific duration. (T =Type)
+export function resolveUntil <T> (promise: Promise<T>, duration: number): Promise<T> {
+  return new Promise(async (resolve) => {
+    const start = performance.now()
+    const result = await promise
+
+    if (performance.now() - start > duration) {
+      resolve(result)
+    } else {
+      setTimeout(() => {
+        resolve(result)
+      }, duration - (performance.now() - start))
+    }
+  })
+}
+
 // Hash a string using SHA256 with Hex encoding.
 export async function hash (data: string): Promise<string> {
   const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data))
@@ -31,4 +47,6 @@ export async function hash (data: string): Promise<string> {
 }
 
 // The result of an operation. (ET = Error Type, DT = Data Type)
-export type Result <ET, DT> = { error: ET, data: null } | { error: null, data: DT }
+export type Result <ET, DT> = ET extends null
+  ? { data: DT }
+  : { error: ET, data: null } | { error: null, data: DT }

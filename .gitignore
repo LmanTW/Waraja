@@ -3,6 +3,7 @@ node_modules
 
 dist/
 
+src/backend/Cargo.lock
 src/backend/target/
 src/backend/gen/
 
