@@ -37,7 +37,29 @@ export default (): ComponentChild => {
   
       projectFolderPath.value = folderPath
 
-      await refreshProject()
+      const { error: projectDiagnoseError, data: diagnostics } = await Project.diagnose(projectFolderPath.value)
+
+      if (projectDiagnoseError !== null) {
+        error.value = projectDiagnoseError
+        progress.value = null
+
+        return
+      }
+
+      projectDiagnostics.value = diagnostics
+
+      if (!diagnostics.find((diagnostic) => diagnostic.type === 'error')) {
+        const { error: projectLoadError, data: project } = await Project.load(projectFolderPath.value)
+
+        if (projectLoadError !== null) {
+          error.value = projectLoadError
+          progress.value = null
+
+          return
+        }
+
+        projectData.value = project
+      }
     }
 
     error.value = null
@@ -57,9 +79,32 @@ export default (): ComponentChild => {
       projectFolderPath.value = folderPath
       projectData.value = null
 
-      await refreshProject()
+      const { error: projectDiagnoseError, data: diagnostics } = await Project.diagnose(projectFolderPath.value)
+
+      if (projectDiagnoseError !== null) {
+        error.value = projectDiagnoseError
+        progress.value = null
+
+        return
+      }
+
+      projectDiagnostics.value = diagnostics
+
+      if (!diagnostics.find((diagnostic) => diagnostic.type === 'error')) {
+        const { error: projectLoadError, data: project } = await Project.load(projectFolderPath.value)
+
+        if (projectLoadError !== null) {
+          error.value = projectLoadError
+          progress.value = null
+
+          return
+        }
+
+        projectData.value = project
+      }
     }
 
+    error.value = null
     progress.value = null
   }
 

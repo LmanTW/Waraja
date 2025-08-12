@@ -3,7 +3,8 @@
 
   "scripts": {
     "start": "tauri dev",
-    "build": "tauri build"
+    "build": "tauri build",
+    "check": "tsc --noEmit"
   },
 
   "dependencies": {
@@ -22,6 +23,7 @@
     "@preact/preset-vite": "^2.10.2",
     "@tauri-apps/cli": "^2.7.1",
     "@types/bun": "^1.2.20",
-    "vite": "^7.1.1"
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2"
   }
 }

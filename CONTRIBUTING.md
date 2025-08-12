@@ -2,15 +2,40 @@
 
 Please follow this guideline when contributing!
 
+- [Developing](#developing)
 - [Commit Message](#commit-message)
 - [Pull Request Message](#pull-request-message)
+
+## Developing
+
+> [!NOTE]
+> Requirements: [Bun](https://bun.sh), [Rust](https://www.rust-lang.org).
+
+1. Clone the repository.
+
+```bash
+git clone https://github.com/LmanTW/Waraja.git
+cd Waraja
+```
+
+2. Install the dependencies.
+
+```bash
+bun install
+```
+
+3. Run Waraja in development mode with live-reloading.
+
+```bast
+bun run start
+```
 
 ## Commit Message
 
 Use the following format when writing a commit message:
 
 ```
-<type>: <message>`
+<type>: <message>
 ```
 
 > [!NOTE]
